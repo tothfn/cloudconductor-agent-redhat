@@ -9,9 +9,9 @@ package de.cinovo.cloudconductor.agent.helper;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,9 +43,9 @@ import de.cinovo.cloudconductor.api.model.SSHKey;
 /**
  * Copyright 2013 Cinovo AG<br>
  * <br>
- * 
+ *
  * @author psigloch
- * 
+ *
  */
 public class FileHelper {
 	
@@ -54,33 +54,44 @@ public class FileHelper {
 	}
 	
 	/**
-	 * @throws CloudConductorException thrown if yum url retrieval fails
-	 * @throws IOException thrown if file couln't be generated
+	 * @throws CloudConductorException thrown if url retrieval fails or the repo type is wrong
+	 * @throws IOException thrown if file could not be generated
 	 */
-	public static void writeYumRepo() throws CloudConductorException, IOException {
-		String yumName = System.getProperty(AgentVars.YUM_NAME_PROP);
-		String fileName = AgentVars.YUM_REPO_FOLDER + yumName + AgentVars.YUM_REPO_ENDING;
-		try (FileWriter writer = new FileWriter(new File(fileName))) {
-			writer.append("[");
-			writer.append(yumName);
-			writer.append("]");
-			writer.append(System.lineSeparator());
-			writer.append("name=" + yumName + " deploy repository");
-			writer.append(System.lineSeparator());
-			writer.append("failovermethod=priority");
-			writer.append(System.lineSeparator());
-			writer.append("baseurl=");
-			writer.append(ServerCom.getYumPath());
-			writer.append(System.lineSeparator());
-			writer.append("enabled=0");
-			writer.append(System.lineSeparator());
-			writer.append("metadata_expire=1h");
-			writer.append(System.lineSeparator());
-			writer.append("gpgcheck=0");
-			writer.append(System.lineSeparator());
-			writer.flush();
-			writer.close();
+	public static void writePackageRepo() throws CloudConductorException, IOException {
+		if (RepoTypeHelper.getRepoType().equals(RepoType.YUM)) {
+			String yumName = System.getProperty(AgentVars.REPO_NAME_PROP);
+			String fileName = AgentVars.YUM_REPO_FOLDER + yumName + AgentVars.YUM_REPO_ENDING;
+			try (FileWriter writer = new FileWriter(new File(fileName))) {
+				writer.append("[");
+				writer.append(yumName);
+				writer.append("]");
+				writer.append(System.lineSeparator());
+				writer.append("name=" + yumName + " deploy repository");
+				writer.append(System.lineSeparator());
+				writer.append("failovermethod=priority");
+				writer.append(System.lineSeparator());
+				writer.append("baseurl=");
+				writer.append(ServerCom.getRepoPath());
+				writer.append(System.lineSeparator());
+				writer.append("enabled=0");
+				writer.append(System.lineSeparator());
+				writer.append("metadata_expire=1h");
+				writer.append(System.lineSeparator());
+				writer.append("gpgcheck=0");
+				writer.append(System.lineSeparator());
+				writer.flush();
+				writer.close();
+			}
+		} else if (RepoTypeHelper.getRepoType().equals(RepoType.DEB)) {
+			String debName = System.getProperty(AgentVars.REPO_NAME_PROP);
+			String fileName = AgentVars.DEB_REPO_FOLDER + debName + AgentVars.DEB_REPO_ENDING;
+			try (FileWriter writer = new FileWriter(new File(fileName))) {
+				writer.append("deb " + ServerCom.getRepoPath());
+				writer.flush();
+				writer.close();
+			}
 		}
+		
 	}
 	
 	/**
@@ -94,7 +105,7 @@ public class FileHelper {
 	
 	/**
 	 * Check if a file has a specific file mode or not
-	 * 
+	 *
 	 * @param file the file to check
 	 * @param fileMode the file mode to check
 	 * @return file mode is equal or not
@@ -111,7 +122,7 @@ public class FileHelper {
 	
 	/**
 	 * Checks whether a files owner and group are correct
-	 * 
+	 *
 	 * @param file the file to check
 	 * @param owner the owner
 	 * @param group the group
@@ -166,7 +177,7 @@ public class FileHelper {
 	
 	/**
 	 * writes the authorized key file for root
-	 * 
+	 *
 	 * @param keys the keys to write to the authorized keys file
 	 * @throws IOException if something during write operation fails
 	 */

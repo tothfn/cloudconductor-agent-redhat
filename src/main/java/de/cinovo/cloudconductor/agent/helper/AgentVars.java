@@ -8,9 +8,9 @@ package de.cinovo.cloudconductor.agent.helper;
  * %%
  * Licensed under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -20,9 +20,9 @@ package de.cinovo.cloudconductor.agent.helper;
 /**
  * Copyright 2013 Cinovo AG<br>
  * <br>
- * 
+ *
  * @author psigloch
- * 
+ *
  */
 public interface AgentVars {
 	
@@ -49,13 +49,13 @@ public interface AgentVars {
 	public static final String TEMPLATE_PROP = "TEMPLATE_NAME";
 	
 	/**
-	 * property for the yum repo name
+	 * property for the repo name
 	 */
-	public static final String YUM_NAME_PROP = "nodeagent.repo.name";
+	public static final String REPO_NAME_PROP = "nodeagent.repo.name";
 	/**
-	 * derfault yum repo name
+	 * derfault repo name
 	 */
-	public static final String YUM_NAME_PROP_DEFAULT = "cinovo";
+	public static final String REPO_NAME_PROP_DEFAULT = "cinovo";
 	
 	/**
 	 * system path for yum repos
@@ -67,6 +67,15 @@ public interface AgentVars {
 	public static final String YUM_REPO_ENDING = ".repo";
 	
 	/**
+	 * system path for deb repos
+	 */
+	public static final String DEB_REPO_FOLDER = "/etc/apt/sources.list.d/";
+	/**
+	 * file ending for deb repo definition files
+	 */
+	public static final String DEB_REPO_ENDING = ".list";
+	
+	/**
 	 * service state script
 	 */
 	public static final String SCRIPT_SERVICE_STATE = "serviceState.sh";
@@ -75,11 +84,13 @@ public interface AgentVars {
 	 */
 	public static final String SCRIPT_SERVICE_HANDLER = "serviceHandler.sh";
 	/**
-	 * yum handler script
+	 * package manager handler script
 	 */
-	public static final String SCRIPT_YUM_HANDLER = "yumHandler.sh";
+	public static final String SCRIPT_PACKAGE_MANAGER_HANDLER = "packageManagerHandler.sh";
 	/**
 	 * relative path to the script folder
 	 */
 	public static final String SCRIPTFOLDER = "scripts/";
+
+	public static final String REPO_TYPE_PROP = "REPO_TYPE";
 }

@@ -51,16 +51,16 @@ import de.cinovo.cloudconductor.api.model.Template;
  *
  */
 public class ServerCom {
-
+	
 	private static final AgentHandler agent = new AgentHandler(AgentState.info().getServer());
 	private static final ConfigValueHandler config = new ConfigValueHandler(AgentState.info().getServer());
 	private static final ConfigFileHandler file = new ConfigFileHandler(AgentState.info().getServer());
-
-
+	
+	
 	private ServerCom() {
 		// prevent instantiation
 	}
-
+	
 	/**
 	 * @return the template for this agent
 	 * @throws CloudConductorException error if retrieval fails
@@ -72,7 +72,7 @@ public class ServerCom {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-
+	
 	/**
 	 * @return the config for this agent
 	 * @throws CloudConductorException error if retrieval fails
@@ -84,20 +84,21 @@ public class ServerCom {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-
+	
 	/**
-	 * @return the yum repo path
+	 * @return the repo path
 	 * @throws CloudConductorException error if retrieval fails
 	 */
-	public static String getYumPath() throws CloudConductorException {
+	public static String getRepoPath() throws CloudConductorException {
 		try {
 			Template template = ServerCom.getTemplate();
+			// TODO: Rename to getRepoPath
 			return template.getYum();
 		} catch (RuntimeException e) {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-
+	
 	/**
 	 * @return the services of the host
 	 * @throws CloudConductorException thrown if communication with cloudconductor failed
@@ -110,7 +111,7 @@ public class ServerCom {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-
+	
 	/**
 	 * @param cf the file
 	 * @return the data
@@ -136,7 +137,7 @@ public class ServerCom {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-
+	
 	/**
 	 * @return the ssh keys
 	 * @throws CloudConductorException thrown if communication with cloudconductor failed
@@ -149,7 +150,7 @@ public class ServerCom {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-
+	
 	/**
 	 * @param req the service update req
 	 * @return the response
@@ -164,7 +165,7 @@ public class ServerCom {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-
+	
 	/**
 	 * @param installedPackages the installed packages
 	 * @return the response
@@ -179,7 +180,7 @@ public class ServerCom {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-
+	
 	/**
 	 * @return the response
 	 * @throws CloudConductorException thrown if communication with cloudconductor failed
@@ -193,7 +194,7 @@ public class ServerCom {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * @return the response
 	 * @throws CloudConductorException thrown if communication with cloudconductor failed
@@ -206,7 +207,7 @@ public class ServerCom {
 			throw new CloudConductorException(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * @return the response
 	 * @throws CloudConductorException thrown if communication with cloudconductor failed

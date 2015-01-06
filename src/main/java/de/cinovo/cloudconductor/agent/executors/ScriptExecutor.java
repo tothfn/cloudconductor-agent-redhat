@@ -8,9 +8,9 @@ package de.cinovo.cloudconductor.agent.executors;
  * %%
  * Licensed under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -30,12 +30,12 @@ import de.cinovo.cloudconductor.api.model.Service;
 /**
  * Copyright 2013 Cinovo AG<br>
  * <br>
- * 
+ *
  * @author psigloch
- * 
+ *
  */
 public class ScriptExecutor extends AbstractExecutor<String> {
-	
+
 	/**
 	 * @param remove packages to remove, separated by semicolon
 	 * @param install packages to install, separated by semicolon
@@ -43,37 +43,37 @@ public class ScriptExecutor extends AbstractExecutor<String> {
 	 * @return the executor
 	 */
 	public static ScriptExecutor generatePackageHandler(Collection<PackageVersion> remove, Collection<PackageVersion> install, Collection<PackageVersion> update) {
-		String scriptName = AgentVars.SCRIPT_YUM_HANDLER;
-		String repoArg = "-y " + System.getProperty(AgentVars.YUM_NAME_PROP);
+		String scriptName = AgentVars.SCRIPT_PACKAGE_MANAGER_HANDLER;
+		String repoArg = "-y " + System.getProperty(AgentVars.REPO_NAME_PROP);
 		StringBuilder d = new StringBuilder();
 		StringBuilder i = new StringBuilder();
 		StringBuilder u = new StringBuilder();
 		if ((remove != null) && !remove.isEmpty()) {
 			d.append("-d ");
 			for (PackageVersion pck : remove) {
-				d.append(ScriptExecutor.rpmToString(pck));
+				d.append(ScriptExecutor.packageVersionToString(pck));
 				d.append(";");
 			}
 		}
-		
+
 		if ((install != null) && !install.isEmpty()) {
 			i.append("-i ");
 			for (PackageVersion pck : install) {
-				i.append(ScriptExecutor.rpmToString(pck));
+				i.append(ScriptExecutor.packageVersionToString(pck));
 				i.append(";");
 			}
 		}
-		
+
 		if ((update != null) && !update.isEmpty()) {
 			u.append("-u ");
 			for (PackageVersion pck : update) {
-				u.append(ScriptExecutor.rpmToString(pck));
+				u.append(ScriptExecutor.packageVersionToString(pck));
 				u.append(";");
 			}
 		}
 		return new ScriptExecutor(scriptName, repoArg, d.toString(), i.toString(), u.toString());
 	}
-	
+
 	/**
 	 * @param restart services to restart
 	 * @param start services to start
@@ -92,7 +92,7 @@ public class ScriptExecutor extends AbstractExecutor<String> {
 				r.append(";");
 			}
 		}
-		
+
 		if ((stop != null) && !stop.isEmpty()) {
 			s.append("-s ");
 			for (String service : stop) {
@@ -100,7 +100,7 @@ public class ScriptExecutor extends AbstractExecutor<String> {
 				s.append(";");
 			}
 		}
-		
+
 		if ((restart != null) && !restart.isEmpty()) {
 			u.append("-u ");
 			for (String service : restart) {
@@ -110,7 +110,7 @@ public class ScriptExecutor extends AbstractExecutor<String> {
 		}
 		return new ScriptExecutor(scriptName, r.toString(), s.toString(), u.toString());
 	}
-	
+
 	/**
 	 * @param services the services
 	 * @return the executor
@@ -126,21 +126,21 @@ public class ScriptExecutor extends AbstractExecutor<String> {
 		}
 		return new ScriptExecutor(scriptName, cmd.toString().trim());
 	}
-	
-	private static String rpmToString(PackageVersion rpm) {
+
+	private static String packageVersionToString(PackageVersion packageVersion) {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(rpm.getName());
+		buffer.append(packageVersion.getName());
 		buffer.append("-");
-		buffer.append(rpm.getVersion());
+		buffer.append(packageVersion.getVersion());
 		return buffer.toString();
 	}
-	
-	
+
+
 	private String script;
 	private String[] args;
 	private String result;
-	
-	
+
+
 	/**
 	 * @param script the script name
 	 * @param args arguments to pass to the script
@@ -149,7 +149,7 @@ public class ScriptExecutor extends AbstractExecutor<String> {
 		this.script = script;
 		this.args = args;
 	}
-	
+
 	@Override
 	protected Process genProcess() throws IOException {
 		File scriptPath = new File(AgentVars.SCRIPTFOLDER + this.script);
@@ -164,7 +164,7 @@ public class ScriptExecutor extends AbstractExecutor<String> {
 		}
 		return Runtime.getRuntime().exec(scriptBuilder.toString());
 	}
-	
+
 	@Override
 	protected void analyzeStream(String[] dev, String[] error) throws ExecutionError {
 		StringBuilder devString = new StringBuilder();
@@ -173,7 +173,7 @@ public class ScriptExecutor extends AbstractExecutor<String> {
 			devString.append(System.lineSeparator());
 		}
 		this.result = devString.toString().trim();
-		
+
 		StringBuilder errorString = new StringBuilder();
 		for (String e : error) {
 			errorString.append(e);
@@ -183,10 +183,10 @@ public class ScriptExecutor extends AbstractExecutor<String> {
 			throw new ExecutionError(errorString.toString().trim());
 		}
 	}
-	
+
 	@Override
 	public String getResult() {
 		return this.result;
 	}
-	
+
 }

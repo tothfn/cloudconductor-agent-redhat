@@ -89,12 +89,12 @@ public final class NodeAgent extends DaemonLifecycleAdapter {
 		Map<String, String> result = new HashMap<String, String>();
 		try {
 			result = ServerCom.getConfig();
-			if ((result.get(AgentVars.YUM_NAME_PROP) == null) || result.get(AgentVars.YUM_NAME_PROP).isEmpty()) {
-				result.put(AgentVars.YUM_NAME_PROP, AgentVars.YUM_NAME_PROP_DEFAULT);
+			if ((result.get(AgentVars.REPO_NAME_PROP) == null) || result.get(AgentVars.REPO_NAME_PROP).isEmpty()) {
+				result.put(AgentVars.REPO_NAME_PROP, AgentVars.REPO_NAME_PROP_DEFAULT);
 			}
 		} catch (RuntimeException | CloudConductorException e) {
-			NodeAgent.LOGGER.warn("Couldn't retrieve properties from config server");
-			result.put(AgentVars.YUM_NAME_PROP, AgentVars.YUM_NAME_PROP_DEFAULT);
+			NodeAgent.LOGGER.warn("Couldn't retrieve properties from CloudConductor");
+			result.put(AgentVars.REPO_NAME_PROP, AgentVars.REPO_NAME_PROP_DEFAULT);
 		}
 		return result;
 	}
@@ -102,9 +102,9 @@ public final class NodeAgent extends DaemonLifecycleAdapter {
 	@Override
 	public void doStart() throws Exception {
 		try {
-			FileHelper.writeYumRepo();
+			FileHelper.writePackageRepo();
 		} catch (CloudConductorException | IOException e) {
-			NodeAgent.LOGGER.error("Couldn't create yum repo file.", e);
+			NodeAgent.LOGGER.error("Couldn't create repo file.", e);
 			throw e;
 		}
 	}
